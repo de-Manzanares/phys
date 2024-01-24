@@ -5,6 +5,7 @@ set(CMAKE_CXX_STANDARD 17)
 
 include_directories(
         src/models
+        src/models/shmBuoyancy
 )
 
 add_executable(phys src/main.cpp
@@ -13,4 +14,5 @@ add_executable(phys src/main.cpp
         src/models/Surface.cpp
         src/models/Particle.cpp
         src/app/shmBuoyancy.cpp
+        src/models/shmBuoyancy/FluidContainer.cpp
 )

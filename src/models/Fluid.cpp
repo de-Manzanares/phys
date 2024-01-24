@@ -22,12 +22,12 @@ Fluid::Fluid(double m, double v, double rho)
         setVolume(v);
         setDensity(m/v);
     }
-    if (v==-1) {
+    else if (v==-1) {
         setMass(m);
         setDensity(rho);
         setVolume(m/rho);
     }
-    if (m==-1) {
+    else if (m==-1) {
         setVolume(v);
         setDensity(rho);
         setMass(rho*v);
