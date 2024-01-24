@@ -22,6 +22,6 @@ double Surface::getArea() const
 void Surface::print() const
 {
     Point::print();
-    std::cout << "A   = " << getArea() << " m^2"
+    std::cout << "A   = " << getArea() << " mass^2"
               << std::endl;
 }

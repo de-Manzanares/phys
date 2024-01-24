@@ -5,7 +5,7 @@
 
 int main()
 {
-    Fluid fluid1(1200);
+    Fluid fluid1(1000);
     fluid1.print();
     fluid1.printAbsolutePressure(1);
     fluid1.printAbsolutePressure(1, 9800);

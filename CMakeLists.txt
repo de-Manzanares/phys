@@ -11,4 +11,6 @@ add_executable(phys src/main.cpp
         src/models/Fluid.cpp
         src/models/Point.cpp
         src/models/Surface.cpp
+        src/models/Particle.cpp
+        src/app/shmBuoyancy.cpp
 )

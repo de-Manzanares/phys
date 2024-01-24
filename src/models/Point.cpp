@@ -20,6 +20,6 @@ double Point::getDepth() const
 }
 void Point::print() const
 {
-    std::cout << "h   = " << getDepth() << " m"
+    std::cout << "h   = " << getDepth() << " mass"
               << std::endl;
 }

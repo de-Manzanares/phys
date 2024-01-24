@@ -1,122 +1,128 @@
 #include "Fluid.h"
 #include <iostream>
 
+const double g = 9.8;
+
 Fluid::Fluid()
 {
-    m = 0;
-    V = 0;
-    rho = 0;
+    mass = 0;
+    volume = 0;
+    density = 0;
 }
 Fluid::Fluid(double density)
 {
-    m = 0;
-    V = 0;
+    mass = 0;
+    volume = 0;
     setDensity(density);
 }
-Fluid::Fluid(double mass, double volume, double density)
+Fluid::Fluid(double m, double v, double rho)
 {
-    if (density==-1) {
-        setMass(mass);
-        setVolume(volume);
-        rho = m/V;
+    if (rho==-1) {
+        setMass(m);
+        setVolume(v);
+        setDensity(m/v);
     }
-    if (volume==-1) {
-        setMass(mass);
-        setDensity(density);
-        V = m/rho;
+    if (v==-1) {
+        setMass(m);
+        setDensity(rho);
+        setVolume(m/rho);
     }
-    if (mass==-1) {
-        setVolume(volume);
-        setDensity(density);
-        m = rho*V;
+    if (m==-1) {
+        setVolume(v);
+        setDensity(rho);
+        setMass(rho*v);
     }
 }
-void Fluid::setMass(double mass)
+void Fluid::setMass(double m)
 {
-    if (mass>=0) {
-        m = mass;
+    if (m>=0) {
+        mass = m;
     }
     else {
-        m = 0;
+        mass = 0;
     }
 }
-void Fluid::setVolume(double volume)
+void Fluid::setVolume(double v)
 {
-    if (volume>=0) {
-        V = volume;
+    if (v>=0) {
+        volume = v;
     }
     else {
-        V = 0;
+        volume = 0;
     }
 }
-void Fluid::setDensity(double density)
+void Fluid::setDensity(double rho)
 {
-    if (density>=0) {
-        rho = density;
+    if (rho>=0) {
+        density = rho;
     }
     else {
-        rho = 0;
+        density = 0;
     }
 }
 double Fluid::getMass() const
 {
-    return m;
+    return mass;
 }
 double Fluid::getVolume() const
 {
-    return V;
+    return volume;
 }
 double Fluid::getDensity() const
 {
-    return rho;
+    return density;
 }
 void Fluid::print() const
 {
-    std::cout << "m   = " << m << " kg\n"
-              << "V   = " << V << " m^3\n"
-              << "rho = " << rho << " kg/m^3"
+    std::cout << "mass    = " << mass << " kg\n"
+              << "volume  = " << volume << " mass^3\n"
+              << "density = " << density << " kg/mass^3"
               << std::endl;
 }
 double Fluid::calculateAbsolutePressure(double depth) const
 {
-    return rho*9.80*depth;
+    return density*g*depth;
 }
 double Fluid::calculateAbsolutePressure(double depth, double p0) const
 {
-    return p0+(rho*9.80*depth);
+    return p0+(density*g*depth);
 }
-double Fluid::calculateBuoyantForce(double mass, double volume, double density) const
+double Fluid::calculateBuoyantForce
+        (double m, double v, double rho) const
 {
     double Fb;
 
-    if (density==-1) {
-        density = mass/volume;
+    if (rho==-1) {
+        rho = m/v;
     }
-    else if (volume==-1) {
-        volume = mass/density;
+    else if (v==-1) {
+        v = m/rho;
     }
-    else if (mass==-1) {
-        mass = density*volume;
+    else if (m==-1) {
+        m = rho*v;
     }
 
-    if (density>rho) {
-        Fb = volume*rho*9.80;
+    if (rho>rho) {
+        Fb = v*rho*g;
     }
     else {
-        Fb = mass*9.80;
+        Fb = m*g;
     }
 
     return Fb;
 }
 void Fluid::printAbsolutePressure(double depth) const
 {
-    std::cout << "p = " << calculateAbsolutePressure(depth) << " N/m^2" << std::endl;
+    std::cout << "p = " << calculateAbsolutePressure(depth) << " N/mass^2"
+              << std::endl;
 }
 void Fluid::printAbsolutePressure(double depth, double p0) const
 {
-    std::cout << "p = " << calculateAbsolutePressure(depth, p0) << " N/m^2" << std::endl;
+    std::cout << "p = " << calculateAbsolutePressure(depth, p0) << " N/mass^2"
+              << std::endl;
 }
-void Fluid::printBuoyantForce(double mass, double volume, double density) const
+void Fluid::printBuoyantForce(double m, double v, double rho) const
 {
-    std::cout << "F_b = " << calculateBuoyantForce(mass, volume, density) << " N" << std::endl;
+    std::cout << "F_b = " << calculateBuoyantForce(m, v, rho)
+              << " N" << std::endl;
 }
