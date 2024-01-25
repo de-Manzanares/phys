@@ -68,7 +68,7 @@ double Fluid::getVolume() const
 {
     return volume;
 }
-double Fluid::getDensity() const
+double Fluid::get_density() const
 {
     return density;
 }

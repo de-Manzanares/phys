@@ -11,7 +11,7 @@ public:
     void setDensity(double density);
     double getMass() const;
     double getVolume() const;
-    double getDensity() const;
+    double get_density() const;
     double calculateAbsolutePressure(double depth) const;
     double calculateAbsolutePressure(double depth, double p0) const;
     double calculateBuoyantForce(double m, double v, double rho) const;

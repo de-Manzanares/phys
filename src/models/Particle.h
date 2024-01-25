@@ -7,18 +7,18 @@ class Particle {
 public:
     Particle();
     void setMass(double m);
-    void updateMass();
     void setVolume(double v);
     void setDensity(double rho);
-    void setPosition(double x0, double x1, double x2);
-    void setVelocity(double v);
-    void setAcceleration(double a);
+    void set_position(double x1);
+    void set_position(double x0, double x1, double x2);
+    void set_velocity(double v);
+    void set_acceleration(double a);
     double getMass() const;
-    double getVolume() const;
+    double get_volume() const;
     double getDensity() const;
     std::vector<double> getPosition() const;
-    double getVelocity() const;
-    double getAcceleration() const;
+    double get_velocity() const;
+    double get_acceleration() const;
 
 private:
     double mass;

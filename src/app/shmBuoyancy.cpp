@@ -1,5 +1,6 @@
 #include <iostream>
 #include <iomanip>
+#include <cmath>
 #include "FluidContainer.h"
 
 double const g = -9.80;
@@ -7,36 +8,65 @@ void
 shmBuoyancy(double particleDensity, double particleVolume, double fluidDensity,
         double containerDepth, double particleStartPosition)
 {
-    const int MODE = 0;
+    FluidContainer container;
 
-    Particle particle;
-    Fluid fluid(fluidDensity);
+    container.particle_set_density(particleDensity);
+    container.particle_set_volume(particleVolume);
+    container.particle_set_mass(particleDensity*particleVolume);
+    container.fluid_set_density(fluidDensity);
+    container.set_boundary_y(-std::abs(containerDepth), 0);
+    container.particle_set_position(0, particleStartPosition, 0);
 
-    particle.setDensity(particleDensity);
-    particle.setVolume(particleVolume);
-    particle.setMass(particleDensity*particleVolume);
-
-    FluidContainer container(particle, fluid);
-
-    container.setBoundary_y(-(std::abs(containerDepth)), 0);
-    container.setParticlePosition(0, particleStartPosition, 0);
-
+    container.particle_calc_a_submerged();
+    double v0 = 0;
+    double p0 = particleStartPosition;
     double t = 0;
-    std::cout << std::fixed << std::showpoint << std::setprecision(5);
-    while (t<=2) {
-        container.updateKinematics(t);
-        if (MODE==0) {
-            std::cout << "t = " << std::setw(10) << t
-                      << "\ta = " << std::setw(10) << particle.getAcceleration()
-                      << "\tv = " << std::setw(10) << particle.getVelocity()
-                      << "\tx = " << std::setw(10) << particle.getPosition()[1]
-                      << "\n";
-        }
-        if (MODE==1) {
-            std::cout << particle.getPosition()[1] << ", ";
-        }
+    double INCREMENT = 0.01;
+    double boundaryTime = (
+            sqrt(
+                    (pow(container.particle_get_velocity(), 2))
+                            -2*container.particle_get_acceleration()*p0)
+                    -container.particle_get_velocity())
+            /container.particle_get_acceleration();
+    double boundaryVelocity = (
+            container.particle_get_acceleration()*boundaryTime
+                    +v0);
 
-        t += 0.01;
+    while (container.particle_get_position()[1]<0 && t<=boundaryTime) {
+        container.particle_calc_velocity(t, v0);
+        container.particle_calc_position(t, v0, p0);
+        std::cout << container.particle_get_position()[1] << ", ";
+        t += INCREMENT;
+    }
 
+    container.particle_calc_a_in_air();
+    container.particle_set_position(0);
+    v0 = boundaryVelocity;
+    p0 = 0;
+    t = 0;
+    boundaryTime = -2*(boundaryVelocity/container.particle_get_acceleration());
+    //std::cout << "\n" << boundaryTime << "\n";
+
+    while (container.particle_get_position()[1]>=0 && t<=boundaryTime) {
+        container.particle_calc_velocity(t, v0);
+        container.particle_calc_position(t, v0, p0);
+        std::cout << container.particle_get_position()[1] << ", ";
+        t += INCREMENT;
+    }
+
+    container.particle_calc_velocity(boundaryTime, v0);
+    v0 = container.particle_get_velocity();
+    container.particle_calc_a_submerged();
+    container.particle_set_position(0);
+    p0 = 0;
+    t = 0;
+    boundaryTime = 2*(boundaryVelocity/container.particle_get_acceleration());
+    //std::cout << "\n" << boundaryTime << "\n";
+
+    while (container.particle_get_position()[1]<=0 && t<=boundaryTime) {
+        container.particle_calc_velocity(t, v0);
+        container.particle_calc_position(t, v0, p0);
+        std::cout << container.particle_get_position()[1] << ", ";
+        t+=INCREMENT;
     }
 }

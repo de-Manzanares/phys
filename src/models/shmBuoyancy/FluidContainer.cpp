@@ -4,16 +4,22 @@
 
 const double g = -9.80;
 
-FluidContainer::FluidContainer(Particle& p, Fluid& f)
+FluidContainer::FluidContainer()
 {
-    particle = &p;
-    fluid = &f;
+    particle = new Particle;
+    fluid = new Fluid;
+
     for (int i = 0; i<3; i++) {
         for (int j = 0; j<2; j++) {
             boundary[i][j] = 0;
         }
     }
     initialVelocity = 0;
+}
+FluidContainer::~FluidContainer()
+{
+    delete particle;
+    delete fluid;
 }
 void FluidContainer::printParticlePosition() const
 {
@@ -31,14 +37,14 @@ void FluidContainer::printParticlePosition() const
 }
 void FluidContainer::setParticlePosition(double x0, double x1, double x2)
 {
-    particle->setPosition(x0, x1, x2);
+    particle->set_position(x0, x1, x2);
 }
 void FluidContainer::setBoundary_x(double left, double right)
 {
     boundary[0][0] = left;
     boundary[0][1] = right;
 }
-void FluidContainer::setBoundary_y(double bottom, double top)
+void FluidContainer::set_boundary_y(double bottom, double top)
 {
     boundary[1][0] = bottom;
     boundary[1][1] = top;
@@ -72,58 +78,68 @@ double FluidContainer::getBoundary_z_front() const
 {
     return boundary[2][1];
 }
-double FluidContainer::calculateParticleAcceleration()
+void FluidContainer::particle_set_density(double d)
 {
-    double a;
-    if (particle->getPosition()[1]<0) {
-        submerged = true;
-    }
-    else {
-        submerged = false;
-    }
-    if (submerged) {
-        a = g-((fluid->getDensity()*particle->getVolume()*g)
-                /particle->getMass());
-    }
-    else {
-        a = g;
-    }
-    return a;
+    particle->setDensity(d);
 }
-double
-FluidContainer::calculateParticleVelocity(double time)
+void FluidContainer::particle_set_volume(double vol)
 {
-    return (particle->getAcceleration())*time+initialVelocity;
+    particle->setVolume(vol);
 }
-double
-FluidContainer::calculateParticlePosition(double time)
+void FluidContainer::particle_set_mass(double m)
 {
-    return particle->getAcceleration()*time*time*0.5+initialVelocity*time
-            +initialPosition;
+    particle->setMass(m);
 }
-void FluidContainer::setParticleAcceleration()
+void FluidContainer::fluid_set_density(double d)
 {
-    particle->setAcceleration(calculateParticleAcceleration());
+    fluid->setDensity(d);
 }
-void FluidContainer::setParticleVelocity(double time)
+void FluidContainer::particle_set_position(double x0, double x1, double x2)
 {
-    particle->setVelocity(calculateParticleVelocity(time));
+    particle->set_position(x0, x1, x2);
 }
-void FluidContainer::setParticlePosition(double time)
+std::vector<double> FluidContainer::particle_get_position()
 {
-    particle->setPosition(0, calculateParticlePosition(time),
-            0);
+    return particle->getPosition();
 }
-void FluidContainer::updateKinematics(double time)
+void FluidContainer::particle_calc_a_submerged()
 {
-    double currentPosition = particle->getPosition()[1];
+    particle->set_acceleration(
+            g-((fluid->get_density()*particle->get_volume()*g)
+                    /particle->getMass())
+    );
+}
+void FluidContainer::particle_calc_velocity(double time, double v0)
+{
+    particle->set_velocity(
+            particle->get_acceleration()*time
+                    +v0
+    );
+}
+double FluidContainer::particle_get_velocity()
+{
+    return particle->get_velocity();
+}
+void FluidContainer::particle_calc_position(double time, double v0, double p0)
+{
+    particle->set_position(
+            particle->get_acceleration()*((time*time)/2)
+                    +v0*time
+                    +p0
+    );
+}
+double FluidContainer::particle_get_acceleration()
+{
+    return particle->get_acceleration();
+}
+void FluidContainer::particle_calc_a_in_air()
+{
+    particle->set_acceleration(
+            g
+    );
+}
+void FluidContainer::particle_set_position(double x1)
+{
+    particle->set_position(x1);
+}
 
-    if ((currentPosition>=0 && submerged)
-            || (currentPosition<0) && !submerged) {
-        initialPosition = currentPosition;
-        initialVelocity = particle->getVelocity();
-    }
-    setParticleAcceleration();
-    setParticleVelocity(time);
-    setParticlePosition(time);
-}

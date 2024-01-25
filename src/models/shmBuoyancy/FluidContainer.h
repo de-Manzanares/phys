@@ -6,11 +6,12 @@
 
 class FluidContainer {
 public:
-    FluidContainer(Particle& p, Fluid& f);
+    FluidContainer();
+    ~FluidContainer();
     void printParticlePosition() const;
     void setParticlePosition(double x0, double x1, double x2);
     void setBoundary_x(double left, double right);
-    void setBoundary_y(double bottom, double top);
+    void set_boundary_y(double bottom, double top);
     void setBoundary_z(double back, double front);
     double getBoundary_x_left() const;
     double getBoundary_x_right() const;
@@ -18,14 +19,19 @@ public:
     double getBoundary_y_top() const;
     double getBoundary_z_back() const;
     double getBoundary_z_front() const;
-    double calculateParticleAcceleration();
-    double calculateParticleVelocity(double time);
-    double calculateParticlePosition(double time);
-    void setParticleAcceleration();
-    void setParticleVelocity(double time);
-    void setParticlePosition(double time);
-    void updateKinematics(double time);
-
+    void particle_set_density(double d);
+    void particle_set_volume(double vol);
+    void particle_set_mass(double m);
+    void fluid_set_density(double d);
+    void particle_set_position(double x0, double x1, double x2);
+    void particle_set_position(double x1);
+    std::vector<double> particle_get_position();
+    void particle_calc_a_submerged();
+    void particle_calc_a_in_air();
+    void particle_calc_velocity(double time, double v0);
+    double particle_get_velocity();
+    double particle_get_acceleration();
+    void particle_calc_position(double time, double v0, double p0);
 private:
     Particle* particle;
     Fluid* fluid;
