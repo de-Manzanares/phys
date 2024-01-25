@@ -2,27 +2,14 @@
 
 const double g = -9.80;
 
-Particle::Particle(double m, double vol, double rho, double x0, double x1,
-        double x2, double vel, double a)
+Particle::Particle()
 {
-    if (rho==-1) {
-        setMass(m);
-        setVolume(vol);
-        setDensity(m/vol);
-    }
-    else if (vol==-1) {
-        setMass(m);
-        setDensity(rho);
-        setVolume(m/rho);
-    }
-    else if (m==-1) {
-        setVolume(vol);
-        setDensity(rho);
-        setMass(rho*vol);
-    }
-    setPosition(x0, x1, x2);
-    setVelocity(vel);
-    setAcceleration(a);
+    setDensity(0);
+    setMass(0);
+    setVolume(0);
+    setPosition(0, 0, 0);
+    setVelocity(0);
+    setAcceleration(0);
 }
 void Particle::setMass(double m)
 {
@@ -32,6 +19,10 @@ void Particle::setMass(double m)
     else {
         mass = 0;
     }
+}
+void Particle::updateMass()
+{
+    mass = density*volume;
 }
 void Particle::setVolume(double v)
 {
@@ -86,12 +77,4 @@ double Particle::getVelocity() const
 double Particle::getAcceleration() const
 {
     return acceleration;
-}
-double Particle::getForceGravity() const
-{
-    return forceGravity;
-}
-void Particle::updateForceGravity()
-{
-    forceGravity = mass*g;
 }

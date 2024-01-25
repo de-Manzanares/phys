@@ -1,7 +1,7 @@
 #include "Fluid.h"
 #include <iostream>
 
-const double g = 9.8;
+const double g = -9.80;
 
 Fluid::Fluid()
 {
