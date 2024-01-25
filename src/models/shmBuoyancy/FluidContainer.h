@@ -20,16 +20,19 @@ public:
     double getBoundary_z_front() const;
     double calculateParticleAcceleration();
     double calculateParticleVelocity(double time);
-    double calculateParticlePosition(double initialPosition, double time);
+    double calculateParticlePosition(double time);
     void setParticleAcceleration();
     void setParticleVelocity(double time);
-    void setParticlePosition(double initialPosition, double time);
-    void updateKinematics(double initialPosition, double time);
+    void setParticlePosition(double time);
+    void updateKinematics(double time);
 
 private:
-    Particle *particle;
-    Fluid *fluid;
+    Particle* particle;
+    Fluid* fluid;
     double boundary[3][2];
+    double initialVelocity;
+    double initialPosition;
+    bool submerged;
 };
 
 #endif //PHYS_CONTAINER_H

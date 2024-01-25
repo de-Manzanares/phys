@@ -13,6 +13,7 @@ FluidContainer::FluidContainer(Particle& p, Fluid& f)
             boundary[i][j] = 0;
         }
     }
+    initialVelocity = 0;
 }
 void FluidContainer::printParticlePosition() const
 {
@@ -73,17 +74,32 @@ double FluidContainer::getBoundary_z_front() const
 }
 double FluidContainer::calculateParticleAcceleration()
 {
-    return g-((fluid->getDensity()*particle->getVolume()*g)/particle->getMass());
-}
-double FluidContainer::calculateParticleVelocity
-        (double time)
-{
-    return (particle->getAcceleration())*time;
+    double a;
+    if (particle->getPosition()[1]<0) {
+        submerged = true;
+    }
+    else {
+        submerged = false;
+    }
+    if (submerged) {
+        a = g-((fluid->getDensity()*particle->getVolume()*g)
+                /particle->getMass());
+    }
+    else {
+        a = g;
+    }
+    return a;
 }
 double
-FluidContainer::calculateParticlePosition(double initialPosition, double time)
+FluidContainer::calculateParticleVelocity(double time)
 {
-    return particle->getAcceleration()*time*time*0.5+initialPosition;
+    return (particle->getAcceleration())*time+initialVelocity;
+}
+double
+FluidContainer::calculateParticlePosition(double time)
+{
+    return particle->getAcceleration()*time*time*0.5+initialVelocity*time
+            +initialPosition;
 }
 void FluidContainer::setParticleAcceleration()
 {
@@ -93,16 +109,21 @@ void FluidContainer::setParticleVelocity(double time)
 {
     particle->setVelocity(calculateParticleVelocity(time));
 }
-void FluidContainer::setParticlePosition(double initialPosition, double time)
+void FluidContainer::setParticlePosition(double time)
 {
-    particle->setPosition(0, calculateParticlePosition(initialPosition, time),
+    particle->setPosition(0, calculateParticlePosition(time),
             0);
 }
-void FluidContainer::updateKinematics(double initialPosition, double time)
+void FluidContainer::updateKinematics(double time)
 {
+    double currentPosition = particle->getPosition()[1];
+
+    if ((currentPosition>=0 && submerged)
+            || (currentPosition<0) && !submerged) {
+        initialPosition = currentPosition;
+        initialVelocity = particle->getVelocity();
+    }
     setParticleAcceleration();
-    // performance, acceleration doesn't need to be
-    // calculated every time
     setParticleVelocity(time);
-    setParticlePosition(initialPosition, time);
+    setParticlePosition(time);
 }
