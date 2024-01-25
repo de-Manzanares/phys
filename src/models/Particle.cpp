@@ -10,6 +10,7 @@ Particle::Particle()
     setPosition(0, 0, 0);
     setVelocity(0);
     setAcceleration(0);
+    position = {0, 0, 0};
 }
 void Particle::setMass(double m)
 {
