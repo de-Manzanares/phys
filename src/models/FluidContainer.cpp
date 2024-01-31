@@ -90,7 +90,7 @@ void FluidContainer::particle_set_mass(double m)
 {
     particle->setMass(m);
 }
-void FluidContainer::fluid_set_density(double d)
+void FluidContainer::set_fluid_density(double d)
 {
     fluid->setDensity(d);
 }
@@ -141,5 +141,9 @@ void FluidContainer::particle_calc_a_in_air()
 void FluidContainer::particle_set_position(double x1)
 {
     particle->set_position(x1);
+}
+double FluidContainer::pressure_at_depth_h(double referencePressure, double h)
+{
+    fluid->pressure_at_depth_h(referencePressure, h);
 }
 

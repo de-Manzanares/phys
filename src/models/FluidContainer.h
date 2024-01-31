@@ -22,7 +22,7 @@ public:
     void particle_set_density(double d);
     void particle_set_volume(double vol);
     void particle_set_mass(double m);
-    void fluid_set_density(double d);
+    void set_fluid_density(double d);
     void particle_set_position(double x0, double x1, double x2);
     void particle_set_position(double x1);
     std::vector<double> particle_get_position();
@@ -32,6 +32,7 @@ public:
     double particle_get_velocity();
     double particle_get_acceleration();
     void particle_calc_position(double time, double v0, double p0);
+    double pressure_at_depth_h(double referencePressure, double h);
 private:
     Particle* particle;
     Fluid* fluid;
