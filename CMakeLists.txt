@@ -13,4 +13,6 @@ add_executable(phys src/main.cpp
         src/models/Particle.cpp
         src/app/shmBuoyancy.cpp
         src/models/FluidContainer.cpp
+        src/models/StandingWavesOnAString.cpp
+        src/models/StandingWavesOnAString.h
 )
