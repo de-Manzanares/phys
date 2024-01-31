@@ -13,7 +13,7 @@ shmBuoyancy(double particleDensity, double particleVolume, double fluidDensity,
     container.particle_set_density(particleDensity);
     container.particle_set_volume(particleVolume);
     container.particle_set_mass(particleDensity*particleVolume);
-    container.fluid_set_density(fluidDensity);
+    container.set_fluid_density(fluidDensity);
     container.set_boundary_y(-std::abs(containerDepth), 0);
     container.particle_set_position(0, particleStartPosition, 0);
 
@@ -21,7 +21,7 @@ shmBuoyancy(double particleDensity, double particleVolume, double fluidDensity,
     double v0 = 0;
     double p0 = particleStartPosition;
     double t = 0;
-    double INCREMENT = 0.01;
+    double INCREMENT = 0.02;
     double boundaryTime = (
             sqrt(
                     (pow(container.particle_get_velocity(), 2))
