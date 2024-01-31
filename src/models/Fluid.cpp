@@ -72,13 +72,6 @@ double Fluid::get_density() const
 {
     return density;
 }
-void Fluid::print() const
-{
-    std::cout << "mass    = " << mass << " kg\n"
-              << "volume  = " << volume << " mass^3\n"
-              << "density = " << density << " kg/mass^3"
-              << std::endl;
-}
 double Fluid::calculateAbsolutePressure(double depth) const
 {
     return density*g*depth;
@@ -111,18 +104,9 @@ double Fluid::calculateBuoyantForce
 
     return Fb;
 }
-void Fluid::printAbsolutePressure(double depth) const
+double Fluid::pressure_at_depth_h(double referencePressure, double h) const
 {
-    std::cout << "p = " << calculateAbsolutePressure(depth) << " N/mass^2"
-              << std::endl;
-}
-void Fluid::printAbsolutePressure(double depth, double p0) const
-{
-    std::cout << "p = " << calculateAbsolutePressure(depth, p0) << " N/mass^2"
-              << std::endl;
-}
-void Fluid::printBuoyantForce(double m, double v, double rho) const
-{
-    std::cout << "F_b = " << calculateBuoyantForce(m, v, rho)
-              << " N" << std::endl;
+    return
+            referencePressure
+                    +get_density()*g*(-h);  // Pa
 }

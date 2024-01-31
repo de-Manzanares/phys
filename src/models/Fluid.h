@@ -15,10 +15,7 @@ public:
     double calculateAbsolutePressure(double depth) const;
     double calculateAbsolutePressure(double depth, double p0) const;
     double calculateBuoyantForce(double m, double v, double rho) const;
-    void printAbsolutePressure(double depth) const;
-    void printAbsolutePressure(double depth, double p0) const;
-    void printBuoyantForce(double m, double v, double rho) const;
-    void print() const;
+    double pressure_at_depth_h(double referencePressure, double h) const;
 
 private:
     double mass;
